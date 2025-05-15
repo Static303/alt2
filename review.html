@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analysis | Olympic Swimming Results Checker</title>
+    <style>
+        :root {
+            --carbon-dark: #1a1d24;
+            --carbon-light: #2a2e38;
+            --carbon-fiber: repeating-linear-gradient(
+                45deg,
+                var(--carbon-dark),
+                var(--carbon-dark) 1px,
+                var(--carbon-light) 2px,
+                var(--carbon-light) 3px
+            );
+            --accent-blue: #00a8ff;
+            --accent-glow: 0 0 10px rgba(0, 168, 255, 0.5);
+            --text-light: #e0e5ec;
+            --code-bg: #1e222d;
+        }
+        
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--carbon-dark);
+            color: var(--text-light);
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        .carbon-wrap {
+            background: var(--carbon-fiber);
+            background-size: 4px 4px;
+            min-height: 100vh;
+        }
+        
+        header {
+            padding: 5rem 0 3rem;
+            text-align: center;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 168, 255, 0.1),
+                transparent
+            );
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--accent-blue),
+                transparent
+            );
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: -0.5px;
+            animation: subtleFloat 6s ease-in-out infinite;
+        }
+        
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        nav {
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        nav::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            background: var(--carbon-dark);
+            width: fit-content;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 1rem 1.8rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 1.8rem;
+            right: 1.8rem;
+            height: 2px;
+            background: var(--accent-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: white;
+        }
+        
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .analysis-section {
+            background: rgba(30, 34, 45, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 2.5rem;
+            margin: 0 0 3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .analysis-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-blue);
+            transform: translateY(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .analysis-section:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 168, 255, 0.3);
+            box-shadow: var(--accent-glow);
+        }
+        
+        .analysis-section:hover::before {
+            transform: translateY(0);
+        }
+        
+        h2 {
+            color: var(--accent-blue);
+            font-size: 1.8rem;
+            margin-top: 0;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.4s ease;
+        }
+        
+        .analysis-section:hover h2::after {
+            width: 80px;
+        }
+        
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .full-width-visual {
+            grid-column: 1 / -1;
+        }
+        
+        .graph-container {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+            transition: all 0.4s ease;
+            background: var(--code-bg);
+        }
+        
+        .graph-container:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--accent-glow);
+        }
+        
+        .graph-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .graph-container:hover img {
+            transform: scale(1.03);
+        }
+        
+        .graph-caption {
+            background: rgba(30, 34, 45, 0.8);
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 168, 255, 0.2);
+        }
+        
+        .graph-caption h3 {
+            color: var(--text-light);
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .graph-caption p {
+            color: rgba(224, 229, 236, 0.8);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        
+        .stats-highlights {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: rgba(40, 45, 60, 0.5);
+            border-radius: 4px;
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-blue);
+        }
+        
+        .stat-card h4 {
+            color: var(--accent-blue);
+            margin: 0 0 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-card p {
+            color: var(--text-light);
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        /* Personal Reflection Section */
+        .reflection-section {
+            background: rgba(30, 34, 45, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            border-radius: 6px;
+            padding: 2.5rem;
+            margin: 0 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .reflection-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-blue);
+        }
+        
+        .reflection-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: var(--accent-blue);
+            box-shadow: var(--accent-glow);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            .visualization-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-highlights {
+                grid-template-columns: 1fr;
+            }
+            
+            .analysis-section, .reflection-section {
+                padding: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="carbon-wrap">
+        <header>
+            <div class="container">
+                <h1>Olympic Swimming Results Checker</h1>
+                <p>50m Freestyle Performance Analysis</p>
+            </div>
+        </header>
+        
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="review.html">Review</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <section class="analysis-section">
+                <h2>50m Freestyle Time Analysis (Example)</h2>
+                <p>Here is an image of the python program in action (creating a graph) this is based on
+                    the 50m freestyle event (mens) from the year 1990 to 2020 for an example.
+                </p>
+                
+                <div class="visualization-grid">
+                    <div class="graph-container">
+                        <img src="images/50mfreestyle.png" 
+                             alt="50m freestyle times progression graph" 
+                             loading="lazy">
+                        <div class="graph-caption">
+                            <h3>Time Progression (1990-2020)</h3>
+                            <p>As you can see clearly, there is definitley a large improvement in the times with frequent
+                                drops almost every Olympics, likely due to new techniques in the likes of diving, turning, breathing, 
+                                that are tested and used to compete with each Olympics.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="graph-container">
+                        <img src="images/50mtimes.png" 
+                             alt="Statistical analysis of 50m freestyle times" 
+                             loading="lazy">
+                        <div class="graph-caption">
+                            <h3>Stats Breakdown</h3>
+                            <p>Here is the program succesfully fetching and displaying the podium winners since 1990, along with 
+                                the mean, median and mode.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-highlights">
+                    <div class="stat-card">
+                        <h4>Average Time</h4>
+                        <p>22.05s</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Median Time</h4>
+                        <p>22.00s</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Most Common Time</h4>
+                        <p>22.72s</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="analysis-section">
+                <h2>Program Flowchart</h2>
+                <p>Heres a basic flowchart I made that showcases the functions and steps that the python program makes in order to complete
+                    the task.</p>
+                
+                <div class="visualization-grid">
+                    <div class="graph-container full-width-visual">
+                        <img src="images/flowchart.png" 
+                             alt="Program flowchart diagram" 
+                             loading="lazy">
+                        <div class="graph-caption">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="reflection-section">
+                <div class="reflection-content">
+                    <h2>Personal Reflection</h2>
+                    <p>I enjoyed doing this project as it allowed me to dive deeper into HTML and learn more about how it works and how to make things work. A few things
+                        I found difficult was I encountered a few glithces with the CSS animations via hovering on the text boxes but I managed to fix them without too much hassle, I also 
+                        decided to put this on a custom domain that I purchased on namecheap.com because I could then see how it looked on all different devices and send it to people so they could view it alot easier. It took about
+                        an hour to figure out but after configuring the DNS settings and plugging it to GitHub Pages (Host) with a https protocol I managed to get it working.
+                    </p>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Website developed by Kit Grimes using VS Code + Trinket.io</p>
+        </footer>
+    </div>
+</body>
+</html>

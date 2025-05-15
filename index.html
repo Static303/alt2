@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olympic Swimming Results Checker</title>
+    <style>
+        :root {
+            --carbon-dark: #1a1d24;
+            --carbon-light: #2a2e38;
+            --carbon-fiber: repeating-linear-gradient(
+                45deg,
+                var(--carbon-dark),
+                var(--carbon-dark) 1px,
+                var(--carbon-light) 2px,
+                var(--carbon-light) 3px
+            );
+            --accent-blue: #00a8ff;
+            --accent-glow: 0 0 10px rgba(0, 168, 255, 0.5);
+            --text-light: #e0e5ec;
+        }
+        
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: var(--accent-glow); }
+            50% { box-shadow: 0 0 20px rgba(0, 168, 255, 0.8); }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--carbon-dark);
+            color: var(--text-light);
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        .carbon-wrap {
+            background: var(--carbon-fiber);
+            background-size: 4px 4px;
+            min-height: 100vh;
+        }
+        
+        header {
+            padding: 5rem 0 3rem;
+            text-align: center;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 168, 255, 0.1),
+                transparent
+            );
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--accent-blue),
+                transparent
+            );
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: -0.5px;
+            animation: subtleFloat 6s ease-in-out infinite;
+        }
+        
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        nav {
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        nav::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            background: var(--carbon-dark);
+            width: fit-content;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 1rem 1.8rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 1.8rem;
+            right: 1.8rem;
+            height: 2px;
+            background: var(--accent-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: white;
+        }
+        
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+        
+        section {
+            background: rgba(30, 34, 45, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 2.5rem;
+            margin: 0 0 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-blue);
+            transform: translateY(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        section:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 168, 255, 0.3);
+            box-shadow: var(--accent-glow);
+        }
+        
+        section:hover::before {
+            transform: translateY(0);
+        }
+        
+        h2 {
+            color: var(--accent-blue);
+            font-size: 1.8rem;
+            margin-top: 0;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.4s ease;
+        }
+        
+        section:hover h2::after {
+            width: 80px;
+        }
+        
+        h3 {
+            color: var(--text-light);
+            margin: 2rem 0 1rem;
+            font-weight: 500;
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+            color: rgba(224, 229, 236, 0.9);
+        }
+        
+        a[href^="mailto"] {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        a[href^="mailto"]:hover {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: var(--accent-blue);
+            box-shadow: var(--accent-glow);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            section {
+                padding: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="carbon-wrap">
+        <header>
+            <div class="container">
+                <h1>Olympic Swimming Results Checker</h1>
+                <p>ALT 2 Project Report - Analyzing swimming results dating back to 1990 (And some earlier) </p>
+            </div>
+        </header>
+        
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="review.html">Review</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <section id="home">
+                <h2>Olympic Swimming Results Analysis</h2>
+                <p>My ALT 2 project focuses on analyzing Olympic swimming results dating back to 1990. Using Python, I've created a program that can process and visualize historical swimming data to uncover interesting patterns and statistics.</p>
+                <p>The program examines various aspects of Olympic swimming competitions, including medal winners, performance trends over time, and comparisons between different swimming strokes and gender categories.</p>
+            </section>
+
+             <div class="container">
+            <section id="home">
+                <h2>Why I Chose This Topic</h2>
+                <p>I chose to do my project on Olympic Swimming because I am a competitive swimmer and I enjoy doing
+                    research about the sport and watching the olympians during the Olympics.
+                </p>
+            </section>
+            
+            <section id="contact">
+                <h2>Contact Information</h2>
+                <h3>Questions About My ALT Project?</h3>
+                <p>If you have any questions about my Olympic Swimming Results analysis project, please feel free to contact me:</p>
+                <p><strong>Email:</strong> <a href="mailto:k.grimes21@bish.ie">k.grimes21@bish.ie</a></p>
+            </section>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>Website developed by Kit Grimes using VS Code + Trinket.io</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

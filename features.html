@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Features - Olympic Swimming Results Checker</title>
+    <style>
+        :root {
+            --carbon-dark: #1a1d24;
+            --carbon-light: #2a2e38;
+            --carbon-fiber: repeating-linear-gradient(
+                45deg,
+                var(--carbon-dark),
+                var(--carbon-dark) 1px,
+                var(--carbon-light) 2px,
+                var(--carbon-light) 3px
+            );
+            --accent-blue: #00a8ff;
+            --accent-glow: 0 0 10px rgba(0, 168, 255, 0.5);
+            --text-light: #e0e5ec;
+        }
+        
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: var(--accent-glow); }
+            50% { box-shadow: 0 0 20px rgba(0, 168, 255, 0.8); }
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--carbon-dark);
+            color: var(--text-light);
+            margin: 0;
+            line-height: 1.6;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        .carbon-wrap {
+            background: var(--carbon-fiber);
+            background-size: 4px 4px;
+            min-height: 100vh;
+        }
+        
+        header {
+            padding: 5rem 0 3rem;
+            text-align: center;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 168, 255, 0.1),
+                transparent
+            );
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--accent-blue),
+                transparent
+            );
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin: 0 0 0.5rem;
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: -0.5px;
+            animation: subtleFloat 6s ease-in-out infinite;
+        }
+        
+        .container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        nav {
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        nav::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: -1;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            background: var(--carbon-dark);
+            width: fit-content;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 1rem 1.8rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 1.8rem;
+            right: 1.8rem;
+            height: 2px;
+            background: var(--accent-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: white;
+        }
+        
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+        
+        .requirements-section {
+            background: rgba(30, 34, 45, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 2.5rem;
+            margin: 0 0 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .requirements-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--accent-blue);
+            transform: translateY(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .requirements-section:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 168, 255, 0.3);
+            box-shadow: var(--accent-glow);
+        }
+        
+        .requirements-section:hover::before {
+            transform: translateY(0);
+        }
+        
+        h2 {
+            color: var(--accent-blue);
+            font-size: 1.8rem;
+            margin-top: 0;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.4s ease;
+        }
+        
+        .requirements-section:hover h2::after {
+            width: 80px;
+        }
+        
+        .requirement-card {
+            background: rgba(40, 45, 60, 0.4);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .requirement-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(0, 168, 255, 0.1),
+                transparent
+            );
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .requirement-card:hover {
+            transform: translateX(8px);
+            background: rgba(40, 45, 60, 0.6);
+        }
+        
+        .requirement-card:hover::before {
+            transform: translateX(0);
+        }
+        
+        .requirement-title {
+            font-weight: 600;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .checkmark {
+            color: var(--accent-blue);
+            margin-right: 0.8rem;
+            font-size: 1.3rem;
+            text-shadow: 0 0 8px rgba(0, 168, 255, 0.5);
+        }
+        
+        .requirement-desc {
+            color: rgba(224, 229, 236, 0.9);
+            line-height: 1.7;
+            padding-left: 1.8rem;
+        }
+        
+        h3 {
+            color: var(--text-light);
+            margin: 2rem 0 1rem;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: var(--accent-blue);
+            box-shadow: var(--accent-glow);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            .requirements-section {
+                padding: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="carbon-wrap">
+        <header>
+            <div class="container">
+                <h1>Olympic Swimming Results Checker</h1>
+                <p>Program Features - ALT 2 Report</p>
+            </div>
+        </header>
+        
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="features.html">Features</a></li>
+                    <li><a href="review.html">Review</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <section class="requirements-section">
+                <h2>Program Features List</h2>
+                <p>My python program can successfully achieve all of the following:</p>
+                
+                <div class="requirement-card">
+                    <div class="requirement-title">
+                        <span class="checkmark">✓</span>
+                        <h3>Mean</h3>
+                    </div>
+                    <p class="requirement-desc">
+                        The program is able to get the mean for the event given by the user.
+                        (The average value calculated by summing all numbers and dividing by the count of values.)
+                    </p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-title">
+                        <span class="checkmark">✓</span>
+                        <h3>Median</h3>
+                    </div>
+                    <p class="requirement-desc">
+                        The program is able to get the median for the event given by the user.
+                        (The middle value when all numbers are sorted in order - half the values are above it, half below.)
+                    </p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-title">
+                        <span class="checkmark">✓</span>
+                        <h3>Mode</h3>
+                    </div>
+                    <p class="requirement-desc">
+                        The program is able to get the mode for the event given by the user.
+                        (The value that appears most frequently in a dataset.)
+                    </p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-title">
+                        <span class="checkmark">✓</span>
+                        <h3>Medal Winners</h3>
+                    </div>
+                    <p class="requirement-desc">
+                        The program will display a color coded dot (Bronze, silver and gold)
+                        for the position of where the top 3 finishers have finished. (seen on graph)
+                    </p>
+                </div>
+                
+                <div class="requirement-card">
+                    <div class="requirement-title">
+                        <span class="checkmark">✓</span>
+                        <h3>Event-Specific Details</h3>
+                    </div>
+                    <p class="requirement-desc">
+                        You can enter events from any year, any distance, and any gender, and the program
+                        will successfully fetch it and generate a graph for you.
+                    </p>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Website developed by Kit Grimes using VS Code + Trinket.io</p>
+        </footer>
+    </div>
+</body>
+</html>
